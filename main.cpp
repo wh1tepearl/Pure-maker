@@ -21,7 +21,6 @@ char lang;
 
 string cpp_path = "";
 string icon_path = "";
-bool create_desktop_shortcut = false;
 string program_name = "";
 bool launch_with_a_out = false;
 
@@ -71,34 +70,54 @@ void init() {
     string temp;
     const char* home = getenv("HOME");
     string desktop_path = string(home) + "/.local/share/applications/" + program_name + ".desktop";
+    string script_path = string(home) + "/pure_maker/.scripts/";
+    
+    
 
     fs::create_directories(".scripts");
     ofstream scriptfile(".scripts/"+program_name+".sh");
     
     if(scriptfile.is_open()) {
-        scriptfile << "#!/bin/bash\n"
-                   << "cd " << cpp_dir_only << "\n"
-                   << "g++ -o " << program_name << " " << cpp_file_name <<"\n"
-                   << "./" << program_name << "\n"
-                   << "read";
-    cout << col_green << "Script created\n" << col_;
-
-    ofstream desktopfile(desktop_path);
-    if (!desktopfile) {
-        cerr << col_red << "Error while creating file: " << desktop_path << std::endl;
-        return;
+        if(launch_with_a_out == false) {
+            scriptfile << "#!/bin/bash\n"
+                    << "cd " << cpp_dir_only << "\n"
+                    << "g++ -o " << program_name << " " << cpp_file_name <<"\n"
+                    << "./" << program_name << "\n"
+                    << "read";
+        }
+        else if(launch_with_a_out = true) {
+            scriptfile << "#!/bin/bash\n"
+                << "cd " << cpp_dir_only << "\n"
+                << "g++ "<< cpp_file_name <<"\n"
+                << "./" << "a.out\n"
+                << "read";
+        }
+        
+        cout << col_green << "Script created\n" << col_;
+    
+        ofstream desktopfile(desktop_path);
+        if(desktopfile.is_open()) {
+            if (icon_path == "") {
+                desktopfile << "[Desktop Entry]\n"
+                << "Type=Application\n"
+                << "Name=" << program_name << "\n"
+                << "Exec=" << "x-terminal-emulator -e " << script_path << program_name << ".sh" << "\n"
+                << "Icon=utilities-terminal\n"
+                << "Categories=Development;\n";
+            }
+            else if (icon_path != "") {
+                desktopfile << "[Desktop Entry]\n"
+                << "Type=Application\n"
+                << "Name=" << program_name << "\n"
+                << "Exec=" << "x-terminal-emulator -e " << script_path << program_name << ".sh" << "\n"
+                << "Icon=" << icon_path << "\n"
+                << "Categories=Development;\n";
+            }
+        system("update-desktop-database ~/.local/share/applications");
+        
+        }
     }
-    if (icon_path == "") {
-        desktopfile << "[Desktop Entry]\n"
-        << "Type=Application\n"
-        << "Name=" << program_name << "\n"
-        << "Exec=" << "x-terminal-emulator -e ~/pure_maker/.scripts/"<< program_name << ".sh" << "\n"
-        << "Icon=utilities-terminal\n"
-        << "Categories=Development;\n";
-    }
-    system("update-desktop-database ~/.local/share/applications");
-
-    }
+       
 
 }
 void ru_about() {
@@ -209,18 +228,11 @@ void main_eng() {
 
 
 
-                if (create_desktop_shortcut == false) {
-                    cout << col_red << "5. Create desktop shortcut(optional): false\n" << col_;
-                }
-                else if (create_desktop_shortcut == true) {
-                    cout << col_green << "5. Create desktop shortcut(optional): true\n" << col_;
-                }
-
-                cout << col_purple << "6. Create script\n7. Quit\n" << col_ << ">>> " << col_red;
+                cout << col_purple << "5. Create script\n6. Quit\n" << col_ << ">>> " << col_red;
 
 
                 cin >> mode_in_1;
-                while(mode_in_1 != "1" && mode_in_1 != "2" && mode_in_1 != "2" && mode_in_1 != "3" && mode_in_1 != "4" && mode_in_1 != "5" && mode_in_1 != "6" && mode_in_1 != "7") {
+                while(mode_in_1 != "1" && mode_in_1 != "2" && mode_in_1 != "2" && mode_in_1 != "3" && mode_in_1 != "4" && mode_in_1 != "5" && mode_in_1 != "6") {
                     cerr << col_red  << "Chose a valid option\n>>> " << col_;
                     cin >> mode_in_1;
                 }
@@ -250,13 +262,6 @@ void main_eng() {
                     system("clear");
                 }
                 else if(mode_in_1 == "5") {
-                    if(create_desktop_shortcut == false)
-                        create_desktop_shortcut = true;
-                    else
-                        create_desktop_shortcut = false;
-                    system("clear");
-                }
-                else if(mode_in_1 == "6") {
                     if(program_name != "" && cpp_path != "")
                         init();
                     else
@@ -266,7 +271,7 @@ void main_eng() {
                             cerr << col_red << "Can't create, cpp file path can't be none\n\n" << col_;
                     break;
                 }
-                else if(mode_in_1 == "7") {
+                else if(mode_in_1 == "6") {
                     break;
                 }
 
