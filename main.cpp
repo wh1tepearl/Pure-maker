@@ -2,6 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
+#include <cstdlib>
 
 #define col_   "\033[0m"
 #define col_purple  "\033[35m"
@@ -16,6 +17,12 @@ namespace fs = filesystem;
 const string MARKER_PATH = ".info/isfirstlaunch";
 const string lang_path = ".info/ru_lang";
 char lang;
+
+string cpp_path = "";
+string icon_path = "";
+bool create_desktop_shortcut = false;
+string program_name = "";
+bool launch_with_a_out = false;
 
 bool ru_lang() {
     try {
@@ -34,6 +41,28 @@ bool create_marker() {
         return false;
     }
 }
+
+string select_file_zenity(string for_what) {
+    string cmd;
+    if (for_what == "cpp")
+        cmd = "zenity --file-selection --title=\"Выберите .cpp файл\" --file-filter='*.cpp'";
+    else if (for_what == "icon")
+        cmd = "zenity --file-selection --title=\"Выберите .cpp файл\" --file-filter='*.png *.svg *.xpm *.jpg *.jpeg'";
+    char buffer[256];
+    string result = "";
+    
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (pipe) {
+        if (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+            result = buffer;
+            result.erase(result.find_last_not_of("\n") + 1);
+        }
+        pclose(pipe);
+    }
+    
+    return result;
+}
+
 void ru_about() {
     cout << col_green << "\nЯзык программы: Русский\n\n" << col_;
     cout << col_cyan << "Добро пожаловать в PureMaker! Это бета-версия, поэтому возможны ошибки..\nВам надоело вводить две команды в терминале, чтобы запустить C++ код?\nС PureMaker вы легко создадите ярлык для сборки и запуска программы.\nPureMaker добавит ярлык в меню приложений и на рабочий стол.\n\n" << col_;
@@ -77,7 +106,6 @@ void greeting() {
         else if (lang_temp == "RU" || lang_temp == "Ru" || lang_temp == "ru" || lang_temp == "R" || lang_temp == "r" || lang_temp == "RUSSIAN" || lang_temp == "Russian" || lang_temp == "russian") {
             ru_lang();
             ru_about();
-            
         }
         
         
@@ -90,14 +118,135 @@ void greeting() {
         lang = 'r';
     }
 }
+void main_eng() {
+    string temp;
+    string mode;
+    string mode_in_1;
+    while(true) {
+        system("clear");
+        cout << col_ << "PureMaker 1.0 beta\n\nSelect a mode\n1. Create a shorcut\n2. view all shorcuts\n" << col_red << ">>> " << col_;
+        cin >> mode;
+
+        while(mode != "1" && mode != "2" && mode != "$About" && mode != "$chlang") {
+            cerr << col_red  << "Chose a valid option\n>>> " << col_;
+            cin >> mode;
+        }
+
+        if (mode == "1") {
+            system("clear");
+            while (true) {
+                if (program_name == "") {
+                    cout << col_red << "1. Program name: none\n" << col_;
+                }
+                else if (program_name != "") {
+                    cout << col_green << "1. Program name: " << program_name << "\n" << col_;
+                }
+
+
+
+                if (cpp_path == "") {
+                    cout << col_red << "2. main.cpp file directory: none\n" << col_;
+                }
+                else if (cpp_path != "") {
+                    cout << col_green << "2. main.cpp file directory: " << cpp_path << "\n" << col_;
+                }
+
+
+
+                if (icon_path == "") {
+                    cout << col_red << "3. icon path (optional): none\n" << col_;
+                }
+                else if (icon_path != "") {
+                    cout << col_green << "3. icon path (optional): " << icon_path << "\n" << col_;
+                }
+
+
+
+                if (launch_with_a_out == false) {
+                    cout << col_red << "4. Launch with a.out (optional): false\n" << col_;
+                }
+                else if (launch_with_a_out == true) {
+                    cout << col_green << "4. Launch with a.out (optional): true\n" << col_;
+                }
+
+
+
+                if (create_desktop_shortcut == false) {
+                    cout << col_red << "5. Create desktop shortcut(optional): false\n" << col_;
+                }
+                else if (create_desktop_shortcut == true) {
+                    cout << col_green << "5. Create desktop shortcut(optional): true\n" << col_;
+                }
+
+                cout << col_purple << "6. Create script\n7. Quit\n" << col_ << ">>> " << col_red;
+
+
+                cin >> mode_in_1;
+                while(mode_in_1 != "1" && mode_in_1 != "2" && mode_in_1 != "2" && mode_in_1 != "3" && mode_in_1 != "4" && mode_in_1 != "5" && mode_in_1 != "6" && mode_in_1 != "7") {
+                    cerr << col_red  << "Chose a valid option\n>>> " << col_;
+                    cin >> mode_in_1;
+                }
+
+
+
+                if(mode_in_1 == "1") {
+                    system("clear");
+                    cout << col_green << "Enter name for your program\n" << col_ << ">>> " << col_green;
+                    cin >> program_name;
+                    mode_in_1 = "null";
+                    system("clear");
+                }
+                else if(mode_in_1 == "2") {
+                    cpp_path = select_file_zenity("cpp");
+                    system("clear");
+                }
+                else if(mode_in_1 == "3") {
+                    icon_path = select_file_zenity("icon");
+                    system("clear");
+                }
+                else if(mode_in_1 == "4") {
+                    if(launch_with_a_out == false)
+                        launch_with_a_out = true;
+                    else
+                        launch_with_a_out = false;
+                    system("clear");
+                }
+                else if(mode_in_1 == "5") {
+                    if(create_desktop_shortcut == false)
+                        create_desktop_shortcut = true;
+                    else
+                        create_desktop_shortcut = false;
+                    system("clear");
+                }
+                else if(mode_in_1 == "7") {
+                    break;
+                }
+
+
+            }
+        }
+        else if (mode == "2") {
+
+        }
+        if (mode == "$About") {
+            system("clear");
+            eng_about();
+            cin >> temp;
+        }
+        else if (mode == "$chlang") {
+
+        }
+    }
+}
 
 int main() {
+    
 
 	greeting();
     if (lang == 'r') {
-        cout << "Программа работает...\n";
+        cout << "PureMaker 1.0 beta\n\n";
     }
     else if(lang == 'e') {
-        cout << "Program works...\n";
+        main_eng();
     }
 }   
