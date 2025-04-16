@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <cstdlib>
+#include <unistd.h>
 
 #define col_   "\033[0m"
 #define col_purple  "\033[35m"
@@ -63,6 +64,43 @@ string select_file_zenity(string for_what) {
     return result;
 }
 
+void init() {
+    fs::path path_obj(cpp_path);
+    string cpp_dir_only = path_obj.parent_path().string();
+    string cpp_file_name = path_obj.filename().string();
+    string temp;
+    const char* home = getenv("HOME");
+    string desktop_path = string(home) + "/.local/share/applications/" + program_name + ".desktop";
+
+    fs::create_directories(".scripts");
+    ofstream scriptfile(".scripts/"+program_name+".sh");
+    
+    if(scriptfile.is_open()) {
+        scriptfile << "#!/bin/bash\n"
+                   << "cd " << cpp_dir_only << "\n"
+                   << "g++ -o " << program_name << " " << cpp_file_name <<"\n"
+                   << "./" << program_name << "\n"
+                   << "read";
+    cout << col_green << "Script created\n" << col_;
+
+    ofstream desktopfile(desktop_path);
+    if (!desktopfile) {
+        cerr << col_red << "Error while creating file: " << desktop_path << std::endl;
+        return;
+    }
+    if (icon_path == "") {
+        desktopfile << "[Desktop Entry]\n"
+        << "Type=Application\n"
+        << "Name=" << program_name << "\n"
+        << "Exec=" << "x-terminal-emulator -e ~/pure_maker/.scripts/"<< program_name << ".sh" << "\n"
+        << "Icon=utilities-terminal\n"
+        << "Categories=Development;\n";
+    }
+    system("update-desktop-database ~/.local/share/applications");
+
+    }
+
+}
 void ru_about() {
     cout << col_green << "\nЯзык программы: Русский\n\n" << col_;
     cout << col_cyan << "Добро пожаловать в PureMaker! Это бета-версия, поэтому возможны ошибки..\nВам надоело вводить две команды в терминале, чтобы запустить C++ код?\nС PureMaker вы легко создадите ярлык для сборки и запуска программы.\nPureMaker добавит ярлык в меню приложений и на рабочий стол.\n\n" << col_;
@@ -218,6 +256,16 @@ void main_eng() {
                         create_desktop_shortcut = false;
                     system("clear");
                 }
+                else if(mode_in_1 == "6") {
+                    if(program_name != "" && cpp_path != "")
+                        init();
+                    else
+                        if(program_name == "")
+                            cerr << col_red << "Can't create, program name can't be none\n\n" << col_;
+                        if(cpp_path == "")
+                            cerr << col_red << "Can't create, cpp file path can't be none\n\n" << col_;
+                    break;
+                }
                 else if(mode_in_1 == "7") {
                     break;
                 }
@@ -228,7 +276,7 @@ void main_eng() {
         else if (mode == "2") {
 
         }
-        if (mode == "$About") {
+        else if (mode == "$About") {
             system("clear");
             eng_about();
             cin >> temp;
