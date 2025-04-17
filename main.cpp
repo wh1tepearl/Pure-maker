@@ -322,7 +322,7 @@ void main_eng() {
         }
         else if (mode == "2") {
             system("clear");
-            system("cd ~/pure_maker/.scripts/ && ls -l");
+            system("cd ~/.scripts/ && ls -l");
             cout << col_purple <<"\nTo continue, press any key + Enter\n" << col_;
             cin >> temp;
         }
@@ -447,7 +447,7 @@ void main_ru() {
         }
         else if (mode == "2") {
             system("clear");
-            system("cd ~/pure_maker/.scripts/ && ls -l");
+            system("cd ~/.scripts/ && ls -l");
             cout << col_purple <<"\nНажмите любую букву + Enter, чтобы продолжить\n" << col_;
             cin >> temp;
 
