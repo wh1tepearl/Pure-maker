@@ -15,8 +15,8 @@
 using namespace std;
 namespace fs = filesystem;
 
-const string MARKER_PATH = ".info/isfirstlaunch";
-const string lang_path = ".info/ru_lang";
+const string MARKER_PATH = "pure_maker/.info/isfirstlaunch";
+const string lang_path = "pure_maker/.info/ru_lang";
 char lang;
 
 string cpp_path = "";
