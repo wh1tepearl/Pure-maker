@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PureMaker
+Comment=C++ Project Manager
+Exec=pmaker
+Icon=~/pure_maker/icon.jpg
+Categories=Development;
+Terminal=true
