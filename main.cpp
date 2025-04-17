@@ -15,8 +15,8 @@
 using namespace std;
 namespace fs = filesystem;
 
-const string MARKER_PATH = "pure_maker/.info/isfirstlaunch";
-const string lang_path = "pure_maker/.info/ru_lang";
+const string MARKER_PATH = ".info/isfirstlaunch";
+const string lang_path = ".info/ru_lang";
 char lang;
 
 string cpp_path = "";
@@ -99,7 +99,7 @@ void init() {
     const char* home = getenv("HOME");
 
     string desktop_path = string(home) + "/.local/share/applications/" + program_name + ".desktop";
-    string script_path = string(home) + "/pure_maker/.scripts/";
+    string script_path = string(home) + "/.scripts/";
     
     
 
