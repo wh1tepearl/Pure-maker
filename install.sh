@@ -24,6 +24,7 @@ cp PureMaker.desktop ~/.local/share/applications/
 rm -f PureMaker.desktop main.cpp install.sh
 
 sudo ln -sf ~/pure_maker/PureMaker /usr/local/bin/pmaker
+clear
 
 echo -e "${GREEN}Done! PureMaker installed.${NC}"
 echo -e "usage:"

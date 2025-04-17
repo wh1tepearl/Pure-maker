@@ -78,7 +78,7 @@ void chlang() {
     }
     if (lang_temp == "ENG" || lang_temp == "Eng" || lang_temp == "eng" || lang_temp == "E" || lang_temp == "e" || lang_temp == "ENGLISH" || lang_temp == "English" || lang_temp == "english") {
         if(lang != 'e') {
-            system("rm ~/pure_maker/.info/ru_lang");
+            system("rm ~/.info/ru_lang");
         }
         cout << col_green << "Language changed succesfully\nTo see the changes, restart PureMaker\n" << col_;
         cin >> temp;
@@ -169,6 +169,7 @@ void eng_about() {
     
 }
 void greeting() {
+    system("clear");
     string lang_temp;
     if (!fs::exists(MARKER_PATH)) {
         cout << col_red
