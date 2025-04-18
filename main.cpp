@@ -112,14 +112,14 @@ void init() {
                     << "cd " << cpp_dir_only << "\n"
                     << "g++ -o " << program_name << " " << cpp_file_name <<"\n"
                     << "./" << program_name << "\n"
-                    << "echo """;
+                    << "echo";
         }
         else if(launch_with_a_out = true) {
             scriptfile << "#!/bin/bash\n"
                 << "cd " << cpp_dir_only << "\n"
                 << "g++ "<< cpp_file_name <<"\n"
                 << "./" << "a.out\n"
-                << "echo """;
+                << "echo";
                 
         }
         
